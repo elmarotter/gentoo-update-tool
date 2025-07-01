@@ -11,18 +11,9 @@ run_sudo() {
     sudo bash -c "$*"
 }
 
-mount_boot() {
-    run_sudo "mount /boot"
-}
-
-unmount_boot() {
-    run_sudo "umount -l /boot"
-}
-
 eclean_kernel() {
-    mount_boot
-    run_sudo "eclean-kernel -n 1"
-    unmount_boot
+   
+    run_sudo "mount /boot && eclean-kernel -n 1 &&  unmount -l /boot"
 }
 
 eix_sync() {
@@ -34,21 +25,16 @@ installed() {
 }
 
 update_bin() {
-    mount_boot
-    run_sudo "emerge --color=y -aDkNuvg --with-bdeps=y --backtrack=3000 --keep-going --buildpkg-exclude 'sys-kernel/*-sources virtual/*' @world"
-    unmount_boot
+    run_sudo "mount /boot && emerge --color=y -aDkNuvg --with-bdeps=y --backtrack=3000 --keep-going --buildpkg-exclude 'sys-kernel/*-sources virtual/*' @world && umount -l /boot"
+    
 }
 
 update() {
-    mount_boot
-    run_sudo "emerge --color=y -aDNuv --with-bdeps=y --backtrack=3000 --keep-going @world"
-    unmount_boot
+    run_sudo "mount /boot && emerge --color=y -aDNuv --with-bdeps=y --backtrack=3000 --keep-going @world && unmount -l /boot"
 }
 
 clean() {
-    mount_boot
-    run_sudo "emerge --color=y -acv && eclean packages"
-    unmount_boot
+    run_sudo "mount /boot && emerge --color=y -acv && eclean packages && unmount -l /boot"
 }
 
 repair() {
@@ -72,8 +58,7 @@ rebuild_world() {
 }
 
 rebuild_system_world() {
-    run_sudo "emerge --color=y -e --buildpkg-exclude 'sys-kernel/*-sources virtual/*' @system"
-    run_sudo "emerge --color=y -e --buildpkg-exclude 'sys-kernel/*-sources virtual/*' @world"
+    run_sudo "emerge --color=y -e --buildpkg-exclude 'sys-kernel/*-sources virtual/*' @system && emerge --color=y -e --buildpkg-exclude 'sys-kernel/*-sources virtual/*' @world"
 }
 
 show_news() {
