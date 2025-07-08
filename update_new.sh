@@ -5,10 +5,8 @@ LOGFILE="$HOME/.local/share/log/update_script.log"
 mkdir -p "$(dirname "$LOGFILE")"
 exec > >(stdbuf -i0 -oL -eL tee -a "$LOGFILE") 2>&1
 
-trap 'sudo umount -l /boot 2>/dev/null || true' EXIT
-
 run_sudo() {
-    sudo bash -c "$*"
+    sudo /bin/sh -c "$*"
 }
 
 eclean_kernel() {
