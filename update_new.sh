@@ -10,12 +10,11 @@ run_sudo() {
 }
 
 eclean_kernel() {
-   
     run_sudo "mount /boot && eclean-kernel -n 1 &&  unmount -l /boot"
 }
 
 eix_sync() {
-    run_sudo "eix-sync"
+     run_sudo "TERM=xterm-256color eix-sync --color=yes"
 }
 
 installed() {
