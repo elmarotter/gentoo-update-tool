@@ -1,59 +1,78 @@
 # Gentoo Update Tool
 
+A minimalistic, reliable update script for Gentoo Linux.  
 This tool automates the full Gentoo maintenance workflow while keeping everything transparent and under user control.  
 It is designed for users who understand Gentoo’s internals and want a predictable, reproducible update cycle without unnecessary complexity.
 
 ---
-Features
-• Sync Portage
-• Update @world
-• Rebuild reverse dependencies
-• Clean unused packages
-• Check preserved libraries
-• Apply config file updates
-• Optional detection of unused USE flags
-• Optional detection of outdated language targets (PHP, Python, etc.)
-• Clear, structured output
-• No hidden magic — every step is explicit
 
----
-**Why this tool exists**
-Gentoo gives you full control, but the update process can be repetitive.  
-This script captures the best‑practice sequence that experienced Gentoo users normally run manually and turns it into a consistent workflow.
-It does not hide complexity — it simply removes the tedium.
+## Clone & Run
 
----
-Usage
-Run as root:
-```
-./update_new.sh
-```
-
-The script will:
-1. Sync Portage
-2. Update @world
-3. Rebuild reverse dependencies
-4. Check for preserved libraries
-5. Clean unused packages
-6. Apply config updates
-7. Optionally detect unused USE flags
-You remain in full control of USE‑flag changes and configuration merges.
-
----
-**Requirements**
-• Gentoo Linux
-• Portage
-• Standard system tools (bash, diff, etc.)
-
-**Clone & Run**
-```
+```bash
 git clone https://github.com/elmarotter/gentoo-update-tool.git
 cd gentoo-update-tool
 sudo ./update_new.sh
 ```
 
-**License (MIT)**
+---
+
+## Features
+
+- Sync Portage  
+- Update @world  
+- Rebuild reverse dependencies  
+- Clean unused packages  
+- Check preserved libraries  
+- Apply config file updates  
+- Optional detection of unused USE flags  
+- Optional detection of outdated language targets (PHP, Python, etc.)  
+- Clear, structured output  
+- No hidden magic — every step is explicit  
+
+---
+
+## Why this tool exists
+
+Gentoo gives you full control, but the update process can be repetitive.  
+This script captures the best‑practice sequence that experienced Gentoo users normally run manually and turns it into a consistent workflow.
+
+It does **not** hide complexity — it simply removes the tedium.
+
+---
+
+## Usage
+
+Run as root:
+
+```bash
+./update_new.sh
 ```
+
+The script will:
+
+1. Sync Portage  
+2. Update @world  
+3. Rebuild reverse dependencies  
+4. Check for preserved libraries  
+5. Clean unused packages  
+6. Apply config updates  
+7. Optionally detect unused USE flags  
+
+You remain in full control of USE‑flag changes and configuration merges.
+
+---
+
+## Requirements
+
+- Gentoo Linux  
+- Portage  
+- Standard system tools (bash, diff, etc.)  
+
+---
+
+## License (MIT)
+
+```text
 MIT License
 
 Copyright (c) 2024 Elmar Otter
@@ -76,5 +95,3 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
 IN THE SOFTWARE.
 ```
-
-
