@@ -1,56 +1,68 @@
+**Gentoo Update Tool**
+This tool automates the full Gentoo maintenance workflow while keeping everything transparent and under user control.  
+It is designed for users who understand Gentoo’s internals and want a predictable, reproducible update cycle without unnecessary complexity.
+---
+Features
+• Sync Portage
+• Update @world
+• Rebuild reverse dependencies
+• Clean unused packages
+• Check preserved libraries
+• Apply config file updates
+• Optional detection of unused USE flags
+• Optional detection of outdated language targets (PHP, Python, etc.)
+• Clear, structured output
+• No hidden magic — every step is explicit
+---
+Why this tool exists
+Gentoo gives you full control, but the update process can be repetitive.  
+This script captures the best‑practice sequence that experienced Gentoo users normally run manually and turns it into a consistent workflow.
+It does not hide complexity — it simply removes the tedium.
+---
+Usage
+Run as root:
+./update_new.sh
 
-Nederlands
-# Gentoo Update Tool
+he script will:
+1. Sync Portage
+2. Update @world
+3. Rebuild reverse dependencies
+4. Check for preserved libraries
+5. Clean unused packages
+6. Apply config updates
+7. Optionally detect unused USE flags
+You remain in full control of USE‑flag changes and configuration merges.
+---
+Requirements
+• Gentoo Linux
+• Portage
+• Standard system tools (bash, diff, etc.)
 
-Een interactieve Bash-tool voor het beheren en bijwerken van een Gentoo Linux-systeem. Deze tool biedt een gebruiksvriendelijke menustructuur waarmee je veelvoorkomende onderhoudstaken kunt uitvoeren zoals updates, opschonen, kernelbeheer en systeemherstel.
-
-## Functionaliteiten
-
-- Synchroniseer de portage tree met `eix-sync`
-- Update het systeem met of zonder binaries
-- Verwijder oude kernels
-- Voer systeemopschoning uit (inclusief distfiles en packages)
-- Herbouw `@system`, `@world` of beide
-- Voer `@preserved-rebuild` uit
-- Herstel gebroken afhankelijkheden met `revdep-rebuild`
-- Update configuratiebestanden met `dispatch-conf`
-- Lees Gentoo nieuwsberichten
-- Voer `perl-cleaner` uit
-- Toon geïnstalleerde pakketten
-
-## Installatie
-
-1. Clone deze repository:
-
-```bash
+**Clone & Run**
 git clone https://github.com/elmarotter/gentoo-update-tool.git
 cd gentoo-update-tool
-```
-Engels
+sudo ./update_new.sh
 
-# Gentoo Update Tool
+License (MIT)
+MIT License
 
-An interactive Bash tool for managing and updating a Gentoo Linux system. This tool provides a user-friendly menu interface to perform common maintenance tasks such as system updates, cleanup, kernel management, and system repair.
+Copyright (c) 2024 Elmar Otter
 
-## Features
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the “Software”), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
 
-- Synchronize the portage tree using `eix-sync`
-- Update the system with or without binary packages
-- Remove old kernels
-- Perform system cleanup (including distfiles and packages)
-- Rebuild `@system`, `@world`, or both
-- Run `@preserved-rebuild`
-- Repair broken dependencies using `revdep-rebuild`
-- Update configuration files with `dispatch-conf`
-- Read Gentoo news items
-- Run `perl-cleaner`
-- Display installed packages
+The above copyright notice and this permission notice shall be included in
+all copies or substantial portions of the Software.
 
-## Installation
+THE SOFTWARE IS PROVIDED “AS IS”, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
+FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
+IN THE SOFTWARE.
 
-1. Clone this repository:
-
-```bash
-git clone https://github.com/elmarotter/gentoo-update-tool.git
-cd gentoo-update-tool
-```
