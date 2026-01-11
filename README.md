@@ -1,4 +1,5 @@
-**Gentoo Update Tool**
+# Gentoo Update Tool
+
 This tool automates the full Gentoo maintenance workflow while keeping everything transparent and under user control.  
 It is designed for users who understand Gentoo’s internals and want a predictable, reproducible update cycle without unnecessary complexity.
 ---
