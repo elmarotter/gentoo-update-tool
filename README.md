@@ -14,11 +14,14 @@ Features
 • Optional detection of outdated language targets (PHP, Python, etc.)
 • Clear, structured output
 • No hidden magic — every step is explicit
+
 ---
 Why this tool exists
 Gentoo gives you full control, but the update process can be repetitive.  
 This script captures the best‑practice sequence that experienced Gentoo users normally run manually and turns it into a consistent workflow.
 It does not hide complexity — it simply removes the tedium.
+
+
 ---
 Usage
 Run as root:
