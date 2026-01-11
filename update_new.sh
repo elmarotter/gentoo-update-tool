@@ -1,20 +1,28 @@
 #!/bin/bash
-set -euo pipefail
+source /etc/profile
+export EIX_COLOR=always
+#set -euo pipefail
 
 LOGFILE="$HOME/.local/share/log/update_script.log"
 mkdir -p "$(dirname "$LOGFILE")"
 exec > >(stdbuf -i0 -oL -eL tee -a "$LOGFILE") 2>&1
 
+#trap 'sudo umount -l /boot 2>/dev/null || true' EXIT
+
 run_sudo() {
     sudo /bin/sh -c "$*"
 }
 
+run_eix-test-obsolete() {
+	eix-test-obsolete
+}
 eclean_kernel() {
-    run_sudo "mount /boot && eclean-kernel -n 1 &&  unmount -l /boot"
+    run_sudo "mount /boot && eclean-kernel -n 1 && umount -l /boot"
 }
 
 eix_sync() {
-     run_sudo "TERM=xterm-256color eix-sync --color=yes"
+    run_sudo "eix-sync"
+    #run_sudo "TERM=xterm-256color eix-sync --color=yes"
 }
 
 installed() {
@@ -23,15 +31,14 @@ installed() {
 
 update_bin() {
     run_sudo "mount /boot && emerge --color=y -aDkNuvg --with-bdeps=y --backtrack=3000 --keep-going --buildpkg-exclude 'sys-kernel/*-sources virtual/*' @world && umount -l /boot"
-    
 }
 
 update() {
-    run_sudo "mount /boot && emerge --color=y -aDNuv --with-bdeps=y --backtrack=3000 --keep-going @world && unmount -l /boot"
+    run_sudo "mount /boot && emerge --color=y -aDNuv --with-bdeps=y --backtrack=3000 --keep-going @world && umount -l /boot"
 }
 
 clean() {
-    run_sudo "mount /boot && emerge --color=y -acv && eclean packages && unmount -l /boot"
+    run_sudo "mount /boot && emerge --color=y -acv && eclean packages && umount -l /boot"
 }
 
 repair() {
@@ -47,15 +54,15 @@ preserved_rebuild() {
 }
 
 rebuild_system() {
-    run_sudo "emerge --color=y -e --buildpkg-exclude 'sys-kernel/*-sources virtual/*' @system"
+    run_sudo "mount /boot && FEATURES='-getbinpkg' emerge --color=y -eDNv --usepkg=n @system && umount -l /boot"
 }
 
 rebuild_world() {
-    run_sudo "emerge --color=y -e --buildpkg-exclude 'sys-kernel/*-sources virtual/*' @world"
+    run_sudo "mount /boot && FEATURES='-getbinpkg' emerge --color=y -eDNv --usepkg=n @world && umount -l /boot"
 }
 
 rebuild_system_world() {
-    run_sudo "emerge --color=y -e --buildpkg-exclude 'sys-kernel/*-sources virtual/*' @system && emerge --color=y -e --buildpkg-exclude 'sys-kernel/*-sources virtual/*' @world"
+    rebuild_system && rebuild_system && rebuild_world
 }
 
 show_news() {
@@ -87,6 +94,7 @@ options=(
     "Verwijder oude kernels"
     "@preserved-rebuild"
     "Check en herstel"
+    "Doe de eix-test-obsolete"
     "Update config-bestanden"
     "Herbouw systeem"
     "Herbouw wereld"
@@ -111,17 +119,18 @@ while true; do
             5) eclean_kernel; break ;;
             6) preserved_rebuild; break ;;
             7) repair; break ;;
-            8) dispatch_conf; break ;;
-            9) rebuild_system; break ;;
-            10) rebuild_world; break ;;
-            11) rebuild_system_world; break ;;
-            12) show_news; break ;;
-            13) show_all_news; break ;;
-            14) perl_cleaner_all; break ;;
-            15) perl_cleaner_reallyall; break ;;
-            16) eclean_dist; break ;;
-            17) installed; break ;;
-            18) echo "Tot ziens!"; exit 0 ;;
+            8) run_eix-test-obsolete; break ;;
+            9) dispatch_conf; break ;;
+            10) rebuild_system; break ;;
+            11) rebuild_world; break ;;
+            12) rebuild_system_world; break ;;
+            13) show_news; break ;;
+            14) show_all_news; break ;;
+            15) perl_cleaner_all; break ;;
+            16) perl_cleaner_reallyall; break ;;
+            17) eclean_dist; break ;;
+            18) installed; break ;;
+            19) echo "Tot ziens!"; exit 0 ;;
             *) echo "Ongeldige optie: $REPLY" >&2 ;;
         esac
     done
