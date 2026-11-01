@@ -11,9 +11,14 @@ Het is bedoeld voor gebruikers die Gentoo goed kennen en een voorspelbare, repro
 ```bash
 git clone https://github.com/elmarotter/gentoo-update-tool.git
 cd gentoo-update-tool
-sudo ./update_new.sh
+chmod u+x update_new.sh
+chmod u+x update_new_NL-NL.sh
+./update_new.sh
 ```
-
+Voor de Nederlandse versie:
+```bash
+./update_new_NL-NL.sh
+```
 ---
 
 ## Functionaliteit
@@ -25,7 +30,8 @@ sudo ./update_new.sh
 - Preserved libraries controleren  
 - Configuratiebestanden bijwerken  
 - Optioneel: ongebruikte USE‑flags detecteren  
-- Optioneel: verouderde taal‑targets (PHP, Python, etc.) detecteren  
+- Optioneel: verouderde taal‑targets (PHP, Python, etc.) detecteren
+- Functie om pakketgroepen om te zetten naar ~amd64 met een dropdown menu 
 - Heldere, gestructureerde output  
 - Geen verborgen magie — elke stap is expliciet  
 
@@ -42,7 +48,7 @@ Het verbergt geen complexiteit — het verwijdert alleen de herhaling.
 
 ## Gebruik
 
-Voer uit als root:
+Voer uit als gebruiker, het script gebruikt sudo daar waar nodig:
 
 ```bash
 ./update_new.sh
@@ -50,13 +56,12 @@ Voer uit als root:
 
 Het script voert achtereenvolgens uit:
 
-1. Portage sync  
-2. @world update  
-3. Revdep‑rebuild  
-4. Preserved libs check  
-5. Depclean  
-6. Config updates toepassen  
-7. Optioneel: ongebruikte USE‑flags detecteren  
+1) Sync portage met eix-sync                 6) @preserved-rebuild                      11) Herbouw wereld                          16) Perl cleaner reallyall
+2) Update                                    7) Check en herstel                        12) Herbouw systeem + wereld                17) Clean distfiles
+3) Update met binaries                       8) Doe de eix-test-obsolete                13) Toon nieuws                             18) Toon geïnstalleerde pakketten
+4) Clean                                     9) Update config-bestanden                 14) Toon al het nieuws                      19) Genereer ~amd64 keywords per categorie
+5) Verwijder oude kernels                   10) Herbouw systeem                         15) Perl cleaner all                        20) Stoppen
+
 
 Je behoudt volledige controle over USE‑flag wijzigingen en config‑merges.
 
