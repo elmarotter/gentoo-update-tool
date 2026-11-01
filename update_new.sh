@@ -16,6 +16,7 @@ run_sudo() {
 run_eix-test-obsolete() {
         eix-test-obsolete
 }
+
 eclean_kernel() {
     run_sudo "mount /boot && eclean-kernel -n 3 && umount -l /boot"
 }
@@ -37,12 +38,12 @@ qlistamd64() {
     )
 
     echo
-    echo "Beschikbare categorieën:"
+    echo "Available categories:"
     echo
 
     select category in "${categories[@]}"; do
         [[ -n "$category" ]] || {
-            echo "Ongeldige keuze"
+            echo "Invalid selection"
             continue
         }
 
@@ -60,19 +61,19 @@ installed() {
 }
 
 update() {
-    # Stap 1: bepaal of er een nieuwe kernel is
+    # Step 1: determine whether a new kernel is available
     latest=$(ls -1 /lib/modules | sort -V | tail -n1)
     current=$(uname -r)
 
     if [[ "$latest" != "$current" ]]; then
-        echo "Nieuwe kernel gedetecteerd: $latest"
+        echo "New kernel detected: $latest"
         rebuild_cmd="emerge @module-rebuild"
     else
-        echo "Geen nieuwe kernel, sla module-rebuild over"
+        echo "No new kernel detected, skipping module rebuild"
         rebuild_cmd=":"
     fi
 
-    # Stap 2: bouw de volledige sudo-opdracht als één string
+    # Step 2: build the complete sudo command as a single command string
     full_cmd="
         mount /boot &&
         emerge --color=y -aDNuv --with-bdeps=y --backtrack=30 --keep-going @world &&
@@ -80,24 +81,24 @@ update() {
         umount -l /boot
     "
 
-    # Stap 3: voer alles in één sudo-run uit
+    # Step 3: execute everything in a single sudo session
     run_sudo "$full_cmd"
 }
 
 update_bin() {
-    # Stap 1: bepaal of er een nieuwe kernel is 
+    # Step 1: determine whether a new kernel is available
     latest=$(ls -1 /lib/modules | sort -V | tail -n1)
     current=$(uname -r)
 
     if [[ "$latest" != "$current" ]]; then
-        echo "Nieuwe kernel gedetecteerd: $latest"
+        echo "New kernel detected: $latest"
         rebuild_cmd="emerge @module-rebuild"
     else
-        echo "Geen nieuwe kernel, sla module-rebuild over"
+        echo "No new kernel detected, skipping module rebuild"
         rebuild_cmd=":"
     fi
 
-    # Stap 2: bouw de volledige sudo-opdracht als één string
+    # Step 2: build the complete sudo command as a single command string
     full_cmd="
         mount /boot &&
         emerge --color=y -aDkNuvg --with-bdeps=y --backtrack=30 --keep-going \
@@ -106,10 +107,9 @@ update_bin() {
         umount -l /boot
     "
 
-    # Stap 3: voer alles in één sudo-run uit
+    # Step 3: execute everything in a single sudo session
     run_sudo "$full_cmd"
 }
-
 
 clean() {
     run_sudo "mount /boot && emerge --color=y -acv && eclean packages && umount -l /boot"
@@ -127,6 +127,7 @@ dispatch_conf() {
 preserved_rebuild() {
     run_sudo "emerge --color=y -av @preserved-rebuild"
 }
+
 #emerge @module-rebuild
 
 rebuild_system() {
@@ -161,32 +162,34 @@ eclean_dist() {
     run_sudo "eclean-dist"
 }
 
-PS3="Kies een optie: "
+PS3="Select an option: "
+
 options=(
-    "Sync portage met eix-sync"
+    "Sync Portage with eix-sync"
     "Update"
-    "Update met binaries"
+    "Update using binary packages"
     "Clean"
-    "Verwijder oude kernels"
+    "Remove old kernels"
     "@preserved-rebuild"
-    "Check en herstel"
-    "Doe de eix-test-obsolete"
-    "Update config-bestanden"
-    "Herbouw systeem"
-    "Herbouw wereld"
-    "Herbouw systeem + wereld"
-    "Toon nieuws"
-    "Toon al het nieuws"
+    "Check and repair"
+    "Run eix-test-obsolete"
+    "Update configuration files"
+    "Rebuild system"
+    "Rebuild world"
+    "Rebuild system and world"
+    "Show news"
+    "Show all news"
     "Perl cleaner all"
     "Perl cleaner reallyall"
     "Clean distfiles"
-    "Toon geïnstalleerde pakketten"
-    "Genereer ~amd64 keywords per categorie"
-    "Stoppen"
+    "Show installed packages"
+    "Generate ~amd64 keywords by category"
+    "Exit"
 )
 
 while true; do
-    PS3="Kies een optie: "
+    PS3="Select an option: "
+
     select opt in "${options[@]}"; do
         case $REPLY in
             1) eix_sync; break ;;
@@ -208,11 +211,10 @@ while true; do
             17) eclean_dist; break ;;
             18) installed; break ;;
             19) qlistamd64; break ;;
-            20) echo "Tot ziens!"; exit 0 ;;
-            *) echo "Ongeldige optie: $REPLY" >&2 ;;
+            20) echo "Goodbye!"; exit 0 ;;
+            *) echo "Invalid option: $REPLY" >&2 ;;
         esac
     done
 done
-
 
 #eof
