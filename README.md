@@ -57,13 +57,26 @@ Run as a normal user. The script will use sudo only for operations that require 
 ```
 
 The script will:
-
-1) Sync Portage with eix-sync              6) @preserved-rebuild                    11) Rebuild world                         16) Perl cleaner reallyall
-2) Update                                  7) Check and repair                      12) Rebuild system and world              17) Clean distfiles
-3) Update using binary packages            8) Run eix-test-obsolete                 13) Show news                             18) Show installed packages
-4) Clean                                   9) Update configuration files            14) Show all news                         19) Generate ~amd64 keywords by category
-5) Remove old kernels                     10) Rebuild system                        15) Perl cleaner all                      20) Exit
-
+1 Sync Portage with eix-sync
+2 Update
+3 Update using binary packages
+4 Clean
+5 Remove old kernels
+6 @preserved-rebuild
+7 Check and repair
+8 Run eix-test-obsolete
+9 Update configuration files
+10 Rebuild system
+11 Rebuild world
+12 Rebuild system and world
+13 Show news
+14 Show all news
+15 Perl cleaner all
+16 Perl cleaner reallyall
+17 Clean distfiles
+18 Show installed packages
+19 Generate ~amd64 keywords by category
+20 Exit
 
 You remain in full control of USE‑flag changes and configuration merges.
 
