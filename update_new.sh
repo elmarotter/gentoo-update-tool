@@ -14,28 +14,102 @@ run_sudo() {
 }
 
 run_eix-test-obsolete() {
-	eix-test-obsolete
+        eix-test-obsolete
 }
 eclean_kernel() {
-    run_sudo "mount /boot && eclean-kernel -n 1 && umount -l /boot"
+    run_sudo "mount /boot && eclean-kernel -n 3 && umount -l /boot"
 }
 
+#eix_sync() {
+#    run_sudo "eix-sync"
+#    #run_sudo "TERM=xterm-256color eix-sync --color=yes"
+#}
+
 eix_sync() {
-    run_sudo "eix-sync"
-    #run_sudo "TERM=xterm-256color eix-sync --color=yes"
+    exec 3>&1
+    run_sudo "emaint sync -A > /dev/tty 2>&1 < /dev/tty"
+    eix-diff > /dev/tty 2>&1 < /dev/tty
+}
+
+qlistamd64() {
+    mapfile -t categories < <(
+        qlist -IC | cut -d/ -f1 | sort -u
+    )
+
+    echo
+    echo "Beschikbare categorieën:"
+    echo
+
+    select category in "${categories[@]}"; do
+        [[ -n "$category" ]] || {
+            echo "Ongeldige keuze"
+            continue
+        }
+
+        echo
+        qlist -ICv "$category" \
+            | sort -u \
+            | sed 's/^/=/; s/$/ ~amd64/'
+        echo
+        break
+    done
 }
 
 installed() {
     emerge --color=y -epv @world | awk -F'] ' '/^\[/{print $2}' | sort | less -R
 }
 
-update_bin() {
-    run_sudo "mount /boot && emerge --color=y -aDkNuvg --with-bdeps=y --backtrack=3000 --keep-going --buildpkg-exclude 'sys-kernel/*-sources virtual/*' @world && umount -l /boot"
+update() {
+    # Stap 1: bepaal of er een nieuwe kernel is
+    latest=$(ls -1 /lib/modules | sort -V | tail -n1)
+    current=$(uname -r)
+
+    if [[ "$latest" != "$current" ]]; then
+        echo "Nieuwe kernel gedetecteerd: $latest"
+        rebuild_cmd="emerge @module-rebuild"
+    else
+        echo "Geen nieuwe kernel, sla module-rebuild over"
+        rebuild_cmd=":"
+    fi
+
+    # Stap 2: bouw de volledige sudo-opdracht als één string
+    full_cmd="
+        mount /boot &&
+        emerge --color=y -aDNuv --with-bdeps=y --backtrack=30 --keep-going @world &&
+        $rebuild_cmd &&
+        umount -l /boot
+    "
+
+    # Stap 3: voer alles in één sudo-run uit
+    run_sudo "$full_cmd"
 }
 
-update() {
-    run_sudo "mount /boot && emerge --color=y -aDNuv --with-bdeps=y --backtrack=3000 --keep-going @world && umount -l /boot"
+update_bin() {
+    # Stap 1: bepaal of er een nieuwe kernel is 
+    latest=$(ls -1 /lib/modules | sort -V | tail -n1)
+    current=$(uname -r)
+
+    if [[ "$latest" != "$current" ]]; then
+        echo "Nieuwe kernel gedetecteerd: $latest"
+        rebuild_cmd="emerge @module-rebuild"
+    else
+        echo "Geen nieuwe kernel, sla module-rebuild over"
+        rebuild_cmd=":"
+    fi
+
+    # Stap 2: bouw de volledige sudo-opdracht als één string
+    full_cmd="
+        mount /boot &&
+        emerge --color=y -aDkNuvg --with-bdeps=y --backtrack=30 --keep-going \
+            --buildpkg-exclude 'sys-kernel/*-sources virtual/*' @world &&
+        $rebuild_cmd &&
+        umount -l /boot
+    "
+
+    # Stap 3: voer alles in één sudo-run uit
+    run_sudo "$full_cmd"
 }
+
 
 clean() {
     run_sudo "mount /boot && emerge --color=y -acv && eclean packages && umount -l /boot"
@@ -46,19 +120,21 @@ repair() {
 }
 
 dispatch_conf() {
-    run_sudo "dispatch-conf"
+    exec 3>&1
+    run_sudo "dispatch-conf > /dev/tty 2>&1 < /dev/tty"
 }
 
 preserved_rebuild() {
     run_sudo "emerge --color=y -av @preserved-rebuild"
 }
+#emerge @module-rebuild
 
 rebuild_system() {
-    run_sudo "mount /boot && FEATURES='-getbinpkg' emerge --color=y -eDNv --usepkg=n @system && umount -l /boot"
+    run_sudo "mount /boot && FEATURES='-getbinpkg' emerge --color=y -eDNv --usepkg=n --keep-going @system && umount -l /boot"
 }
 
 rebuild_world() {
-    run_sudo "mount /boot && FEATURES='-getbinpkg' emerge --color=y -eDNv --usepkg=n @world && umount -l /boot"
+    run_sudo "mount /boot && FEATURES='-getbinpkg' emerge --color=y -eDNv --usepkg=n --keep-going @world && umount -l /boot"
 }
 
 rebuild_system_world() {
@@ -105,6 +181,7 @@ options=(
     "Perl cleaner reallyall"
     "Clean distfiles"
     "Toon geïnstalleerde pakketten"
+    "Genereer ~amd64 keywords per categorie"
     "Stoppen"
 )
 
@@ -130,7 +207,8 @@ while true; do
             16) perl_cleaner_reallyall; break ;;
             17) eclean_dist; break ;;
             18) installed; break ;;
-            19) echo "Tot ziens!"; exit 0 ;;
+            19) qlistamd64; break ;;
+            20) echo "Tot ziens!"; exit 0 ;;
             *) echo "Ongeldige optie: $REPLY" >&2 ;;
         esac
     done
