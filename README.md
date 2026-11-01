@@ -11,9 +11,14 @@ It is designed for users who understand Gentoo’s internals and want a predicta
 ```bash
 git clone https://github.com/elmarotter/gentoo-update-tool.git
 cd gentoo-update-tool
-./update_new.sh
+chmod u+x ./update_new_NL-NL.sh
+chmod u+x ./update_new.sh
+./update_new.sh 
 ```
-
+For Dutch version run:
+```bash
+./update_new_NL-NL.sh
+```
 ---
 
 ## Features
