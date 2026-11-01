@@ -55,13 +55,26 @@ Voer uit als gebruiker, het script gebruikt sudo daar waar nodig:
 ```
 
 Het script voert achtereenvolgens uit:
-
-1) Sync portage met eix-sync                 6) @preserved-rebuild                      11) Herbouw wereld                          16) Perl cleaner reallyall
-2) Update                                    7) Check en herstel                        12) Herbouw systeem + wereld                17) Clean distfiles
-3) Update met binaries                       8) Doe de eix-test-obsolete                13) Toon nieuws                             18) Toon geïnstalleerde pakketten
-4) Clean                                     9) Update config-bestanden                 14) Toon al het nieuws                      19) Genereer ~amd64 keywords per categorie
-5) Verwijder oude kernels                   10) Herbouw systeem                         15) Perl cleaner all                        20) Stoppen
-
+1 Sync portage met eix-sync
+2 Update
+3 Update met binaries
+4 Clean
+5 Verwijder oude kernels
+6 @preserved-rebuild
+7 Check en herstel
+8 Doe de eix-test-obsolete
+9 Update config-bestanden
+10 Herbouw systeem
+11 Herbouw wereld
+12 Herbouw systeem + wereld
+13 Toon nieuws
+14 Toon al het nieuws
+15 Perl cleaner all
+16 Perl cleaner reallyall
+17 Clean distfiles
+18 Toon geïnstalleerde pakketten
+19 Genereer ~amd64 keywords per categorie
+20 Stoppen
 
 Je behoudt volledige controle over USE‑flag wijzigingen en config‑merges.
 
