@@ -11,23 +11,26 @@ It is designed for users who understand Gentoo’s internals and want a predicta
 ```bash
 git clone https://github.com/elmarotter/gentoo-update-tool.git
 cd gentoo-update-tool
-sudo ./update_new.sh
+./update_new.sh
 ```
 
 ---
 
 ## Features
 
-- Sync Portage  
-- Update @world  
-- Rebuild reverse dependencies  
-- Clean unused packages  
-- Check preserved libraries  
-- Apply config file updates  
-- Optional detection of unused USE flags  
-- Optional detection of outdated language targets (PHP, Python, etc.)  
-- Clear, structured output  
-- No hidden magic — every step is explicit  
+- Sync Portage
+- Update @world
+- Rebuild reverse dependencies
+- Clean unused packages
+- Check preserved libraries
+- Apply config file updates
+- Optional detection of unused USE flags
+- Optional detection of outdated language targets (PHP, Python, etc.)
+- Generate package.accept_keywords entries in the format:
+  `=category/package-version ~amd64`
+- Interactive category-based keyword generation
+- Clear, structured output
+- No hidden magic — every step is explicit
 
 ---
 
@@ -42,7 +45,7 @@ It does **not** hide complexity — it simply removes the tedium.
 
 ## Usage
 
-Run as root:
+Run as a normal user. The script will use sudo only for operations that require elevated privileges.
 
 ```bash
 ./update_new.sh
